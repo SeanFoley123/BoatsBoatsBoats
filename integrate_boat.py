@@ -167,36 +167,39 @@ def boat_com(params):
 		com.append(vector_com/integrate_boat(1, params))
 	com.append(0)									#this part's x
 	return com
+def calc_avs():
+	for k in range(0, 20):
+		theta = k*5+1
+		print theta
+		params = [2, theta, .6]
+		cob = boat_cob(params)
+		com =  boat_com(params)
+		print cob
+		print com
+		difference_cob_com = [0]*2
+		for i in range(2):
+			difference_cob_com[i] = cob[i]-com[i]
+		vector_cob_com = Matrix((difference_cob_com))
+		vector_waterline = Matrix(([cos(theta*pi/180), sin(theta*pi/180)]))
 
-for k in range(0, 20):
-	theta = 170-10*k
-	print theta
-	params = [1, theta, .6]
-	cob = boat_cob(params)
-	com =  boat_com(params)
-	print cob
-	print com
-	difference_cob_com = [0]*3
-	for i in range(3):
-		difference_cob_com[i] = cob[i]-com[i]
-	vector_cob_com = Matrix((difference_cob_com))
-	if theta <= 90:
-		vector_buoyancy = Matrix(([cos(pi/4-theta*pi/180), sin(pi/4-theta*pi/180), 0]))
-	else:
-		vector_buoyancy = Matrix(([cos(-pi/4+theta*pi/180), sin(-pi/4+theta*pi/180), 0]))
-	cross_result = vector_cob_com.cross(vector_buoyancy)[2]
-	print cross_result
-	if cross_result<0:
-		print 'rights'
-	if cross_result>0:
-		print 'tips'
-	if cross_result==0:
-		print 'sits'
-	# if theta > 90:	
-	# 	if cross_result>0:
-	# 		print 'rights'
-	# 	if cross_result<0:
-	# 		print 'tips'
-	# 	if cross_result==0:
-	# 		print 'sits'
-	plot_boat(com, cob, vector_cob_com, vector_buoyancy, params)
+		# if theta <= 90:
+		# 	vector_buoyancy = Matrix(([-tan(theta*pi/180), 1, 0]))
+		# else:
+		# 	vector_buoyancy = Matrix(([-tan(theta*pi/180), 1, 0]))
+
+		dot_result = vector_cob_com.dot(vector_waterline)
+		print dot_result
+		if dot_result>0:
+			print 'rights'
+		if dot_result<0:
+			print 'tips'
+		if dot_result==0:
+			print 'sits'
+		# if theta > 90:	
+		# 	if cross_result>0:
+		# 		print 'rights'
+		# 	if cross_result<0:
+		# 		print 'tips'
+		# 	if cross_result==0:
+		# 		print 'sits'
+		plot_boat(com, cob, vector_cob_com, vector_waterline, params)
